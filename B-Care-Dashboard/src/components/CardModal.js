@@ -106,14 +106,9 @@ export default function CardModal({ ip, user, onClose }) {
     hideConfirm();
   };
 
-  // User clicked “No”
+  // User clicked "No"
   const handleDecline = () => {
-    const page = confirm.page;
-    socket.emit("navigateTo", {
-      ip,
-      page: `${page}?declined=true`,
-    });
-    hideConfirm();
+    hideConfirm(); // Just close the dialog, do nothing else.
   };
 
   const {
