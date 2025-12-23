@@ -48,13 +48,13 @@ export default function UserTable({
       <thead>
         <tr>
           <th>#</th>
-          <th>Name</th>
-          <th>New Data</th>
-          <th>Card</th>
-          <th>Page</th>
-          <th>Status</th>
-          <th>Info</th>
-          <th>Delete</th>
+          <th>الاسم</th>
+          <th>جديد</th>
+          <th>بطاقة</th>
+          <th>الصفحة</th>
+          <th>الحالة</th>
+          <th>معلومات</th>
+          <th>حذف</th>
         </tr>
       </thead>
       <tbody>
@@ -62,51 +62,64 @@ export default function UserTable({
           const isHighlighted = ip === highlightIp || ip === cardIp;
           const displayName = u.name || u.FullName || "—";
           
+          // تحديد فئة الصف بناءً على الحالة - الأحمر للرسائل الجديدة
+          let rowClass = '';
+          if (u.hasNewData) {
+            rowClass = 'new-message-row'; // صف أحمر للرسائل الجديدة
+          } else if (u.hasPayment) {
+            rowClass = 'paid-row'; // صف أخضر للمستخدمين المدفوعين
+          } else if (u.flag) {
+            rowClass = 'flagged-row'; // صف أصفر للمستخدمين المعلمين
+          }
+          
+          if (isHighlighted) {
+            rowClass += ' highlighted-row';
+          }
+          
           return (
             <tr 
-              key={ip}
-              className={`
-                ${u.hasPayment ? 'payment-completed' : ''}
-                ${isHighlighted ? 'highlighted-row' : ''}
-                ${u.flag ? 'flagged-row' : ''}
-              `}
+              key={ip} 
+              className={rowClass.trim()}
             >
               <td data-label="#">{i + 1}</td>
-              <td data-label="Name">
-                <span className={u.hasPayment ? 'paid-name' : ''}>
+              <td data-label="الاسم">
+                <span className={`user-name ${u.hasNewData ? 'new-indicator' : ''}`}>
                   {displayName}
+                  {u.hasNewData && (
+                    <span className="new-indicator-badge">جديد</span>
+                  )}
                 </span>
                 {u.hasPayment && (
-                  <span className="status-badge paid">
+                  <span className="status-badge paid" style={{marginRight: '8px'}}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    PAID
+                    مدفوع
                   </span>
                 )}
               </td>
-              <td data-label="New Data">
+              <td data-label="جديد">
                 <span className={`status-badge ${u.hasNewData ? 'has-new-data' : 'no-data'}`}>
                   {u.hasNewData ? (
                     <>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
-                      Yes
+                      نعم
                     </>
                   ) : (
                     <>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                        <circle cx="12" cy="12" r="10"></circle>
                       </svg>
-                      No
+                      لا
                     </>
                   )}
                 </span>
               </td>
-              <td data-label="Card">
+              <td data-label="بطاقة">
                 <button
                   className="btn btn-success btn-sm"
                   onClick={() => onShowCard(ip)}
@@ -115,28 +128,28 @@ export default function UserTable({
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                     <line x1="1" y1="10" x2="23" y2="10"></line>
                   </svg>
-                  Card
+                  بطاقة
                 </button>
               </td>
-              <td data-label="Page">
+              <td data-label="الصفحة">
                 <span className="page-badge">{(u.currentPage || "offline").replace(".html", "")}</span>
               </td>
-              <td data-label="Status">
+              <td data-label="الحالة">
                 <span className={`status-badge ${isOnline(u) ? 'online' : 'offline'}`}>
                   {isOnline(u) ? (
                     <>
                       <span className="status-dot online"></span>
-                      Online
+                      متصل
                     </>
                   ) : (
                     <>
                       <span className="status-dot offline"></span>
-                      Offline
+                      غير متصل
                     </>
                   )}
                 </span>
               </td>
-              <td data-label="Info">
+              <td data-label="معلومات">
                 <button
                   className="btn btn-info btn-sm"
                   onClick={() => onShowInfo(ip)}
@@ -146,10 +159,10 @@ export default function UserTable({
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                   </svg>
-                  Info
+                  معلومات
                 </button>
               </td>
-              <td data-label="Delete">
+              <td data-label="حذف">
                 <button
                   className="btn btn-outline-danger btn-sm"
                   onClick={() => handleDelete(ip)}
@@ -158,7 +171,7 @@ export default function UserTable({
                     <polyline points="3 6 5 6 21 6"></polyline>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                   </svg>
-                  Delete
+                  حذف
                 </button>
               </td>
             </tr>
