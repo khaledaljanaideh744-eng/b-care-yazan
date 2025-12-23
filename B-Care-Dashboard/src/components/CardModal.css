@@ -1,88 +1,342 @@
 /* src/components/CardModal.css */
 
-/* Arrange the page‐buttons in a grid (no changes needed if you already had this) */
+/* Page Buttons Grid */
 .btn-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-/* Make the payments container scroll horizontally: */
+
+.btn-grid .btn {
+  flex: 0 0 auto;
+  min-width: 110px;
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-grid .btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: rgba(79, 70, 229, 0.05);
+  transform: translateY(-2px);
+}
+
+.btn-grid .btn.active,
+.btn-grid .btn.current-page {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  border-color: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+/* Payments Container */
 .payments-container {
-  margin-top: 1rem;
-  padding-bottom: 1rem;
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin: 20px 0;
+  overflow-x: auto;
 }
 
-.card-sim {
-  padding: 1rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #2a2a72, #009ffd);
-  color: #fff;
-  font-family: monospace;
-  flex: 0 0 auto; /* each .card‐sim won’t shrink below its minWidth */
+.payments-container::-webkit-scrollbar {
+  height: 6px;
 }
 
-.card-sim .full-name,
-.card-sim .number {
-  text-align: center;
-  margin-bottom: 0.5rem;
+.payments-container::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+  border-radius: 3px;
 }
 
-.card-sim .number {
-  letter-spacing: 2px;
+.payments-container::-webkit-scrollbar-thumb {
+  background: var(--text-light);
+  border-radius: 3px;
 }
-.card-sim .details-row {
+
+.payment-card {
+  flex: 0 0 320px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  color: white;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.payment-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.payment-card .card-header {
   display: flex;
   justify-content: space-between;
-  margin: 0.5rem 0;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.payment-card .card-header .card-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-card .card-header span {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.payment-card .card-number {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  text-align: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.payment-card .card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.payment-card .card-body p {
+  margin: 0;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.payment-card .card-body strong {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.payment-card .card-body span {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Details Block */
+.details-block {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 24px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin: 20px 0;
+}
+
+.details-block .section {
+  padding: 20px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-normal);
+}
+
+.details-block .section:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.details-block .section h6 {
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary-color);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.details-block .section h6 svg {
+  width: 18px;
+  height: 18px;
+}
+
+.details-block .section p {
+  margin: 12px 0;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.details-block .section p:last-child {
+  border-bottom: none;
+}
+
+.details-block .section p strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.details-block .section p span {
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', monospace;
+}
+
+/* Blink Animations */
+@keyframes blink-border {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+  }
 }
 
 .blink-green {
-  animation: blink-border 5s infinite;
+  animation: blink-border 2s ease-in-out infinite;
 }
 
-@keyframes blink-border {
-  0%,
-  100% {
-    box-shadow: 0 0 0 rgba(0, 255, 0, 0.7);
+@keyframes blinkGreenText {
+  0%, 100% {
+    background: transparent;
+    color: inherit;
   }
   50% {
-    box-shadow: 0 0 8px rgba(0, 255, 0, 1);
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
   }
 }
 
+.blink-green-text {
+  animation: blinkGreenText 2s ease-in-out;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Card Row Styles */
 .card-row {
-  /* optional: a subtle shadow under each “row” */
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
 }
 
-/* Make new items blink green briefly */
-@keyframes blinkGreen {
-  0% {
-    color: transparent;
-    background-color: transparent;
-  }
-  25% {
-    color: white;
-    background-color: #28a745;
-  }
-  50% {
-    color: transparent;
-    background-color: transparent;
-  }
-  75% {
-    color: white;
-    background-color: #28a745;
-  }
-  100% {
-    color: inherit;
-    background-color: inherit;
-  }
+/* No Data Message */
+.no-data-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
-/* Apply the blink animation for 1.5s */
-.blink-green-text {
-  animation: blinkGreen 3s ease-in-out both;
-  border-radius: 4px;
-  padding: 2px 4px;
+.no-data-message svg {
+  width: 48px;
+  height: 48px;
+  color: var(--text-light);
+}
+
+/* Modal Enhancements */
+.modal-header {
+  position: relative;
+}
+
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+}
+
+.modal-header .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-header .modal-title svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Section Icons */
+.section-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.section-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .btn-grid .btn {
+    min-width: 90px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+  
+  .payment-card {
+    flex: 0 0 280px;
+  }
+  
+  .details-block {
+    grid-template-columns: 1fr;
+  }
+  
+  .payment-card .card-body {
+    grid-template-columns: 1fr;
+  }
 }
